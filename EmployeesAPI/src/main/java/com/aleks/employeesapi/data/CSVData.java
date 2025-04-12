@@ -4,8 +4,6 @@ import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvDate;
 import org.springframework.lang.NonNull;
 
-import java.time.LocalDate;
-
 public record CSVData(
         @NonNull
         @CsvBindByName(column = "EmpID")
@@ -18,10 +16,10 @@ public record CSVData(
         @CsvDate
         @NonNull
         @CsvBindByName(column = "DateFrom")
-        LocalDate startDate,
+        String startDate,
 
         @CsvDate
         @CsvBindByName(column = "DateTo")
-        LocalDate endDate
+        String endDate
 ) {
 }
