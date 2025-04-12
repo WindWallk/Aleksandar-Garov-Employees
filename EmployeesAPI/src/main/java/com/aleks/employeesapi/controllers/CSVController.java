@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.DateTimeException;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,8 @@ public class CSVController {
             List<EmployeeData> employeeDataList = employeeService.convertCSVDataToEmployeeData(csvDataList);
             LongestLastingColleagues longestLastingColleagues = employeeService.findLongestLastingColleagues(employeeDataList);
             return ResponseEntity.ok(new JsonPayload(longestLastingColleagues, null));
+        } catch (DateTimeException e) {
+            return ResponseEntity.badRequest().body(new JsonPayload(null, "One of the dates provided cannot be parsed"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new JsonPayload(null, e.getMessage()));
         }
