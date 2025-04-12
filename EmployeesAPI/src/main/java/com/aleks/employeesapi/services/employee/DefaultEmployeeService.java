@@ -21,7 +21,7 @@ public class DefaultEmployeeService implements EmployeeService {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
             LocalDate from = LocalDate.parse(csvData.startDate(), formatter);
-            LocalDate to = LocalDate.parse(csvData.startDate(), formatter);
+            LocalDate to = LocalDate.parse(csvData.endDate(), formatter);
 
             if (employeeData.isPresent()) {
                 EmployeeData employee = employeeData.get();
