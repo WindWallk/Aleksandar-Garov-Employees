@@ -28,8 +28,6 @@ public class CSVController {
             List<ProjectData> projects = projectService.convertCSVDataToProjectData(csvDataList, datePattern);
             ColleaguesWithCommonProjects colleaguesWithCommonProjects = projectService.findLongestLastingColleagues(projects);
             return ResponseEntity.ok(new JsonPayload(colleaguesWithCommonProjects, null));
-        } catch (DateTimeException e) {
-            return ResponseEntity.badRequest().body(new JsonPayload(null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new JsonPayload(null, e.getMessage()));
         }
