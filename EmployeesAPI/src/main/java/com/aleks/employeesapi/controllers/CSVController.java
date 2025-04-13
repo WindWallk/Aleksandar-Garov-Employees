@@ -21,8 +21,8 @@ public class CSVController {
     @Resource(name = "defaultProjectService")
     private ProjectService projectService;
 
-    @GetMapping("/longest-lasting-colleagues")
-    public ResponseEntity<JsonPayload> extractLongestLastingColleagues(@RequestParam("file") MultipartFile file, @RequestParam("pattern") String datePattern) {
+    @PostMapping("/longest-lasting-colleagues")
+    public ResponseEntity<JsonPayload> extractLongestLastingColleagues(@RequestParam("file") MultipartFile file, @RequestParam("format") String datePattern) {
         try {
             List<CSVData> csvDataList = csvService.extractCSVDataFromFile(file);
             List<ProjectData> projects = projectService.convertCSVDataToProjectData(csvDataList, datePattern);

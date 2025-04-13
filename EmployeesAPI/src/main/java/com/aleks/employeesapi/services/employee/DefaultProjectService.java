@@ -17,23 +17,23 @@ public class DefaultProjectService implements ProjectService {
         List<ProjectData> allProjects = new ArrayList<>();
 
         csvDataList.forEach(csvData -> {
-            Optional<ProjectData> projectData = allProjects.stream().filter(e -> e.id() == csvData.projectId()).findFirst();
+            Optional<ProjectData> projectData = allProjects.stream().filter(e -> e.id() == csvData.getProjectId()).findFirst();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern, Locale.ENGLISH);
-            LocalDate from = LocalDate.parse(csvData.startDate(), formatter);
-            LocalDate to = csvData.endDate() != null ? LocalDate.parse(csvData.endDate(), formatter) : LocalDate.now();
+            LocalDate from = LocalDate.parse(csvData.getStartDate(), formatter);
+            LocalDate to = !csvData.getEndDate().equals("NULL") ? LocalDate.parse(csvData.getEndDate(), formatter) : LocalDate.now();
 
             if (from.isAfter(to)) {
                 throw new DateTimeException("Start date cannot be after current date or end date");
             }
 
-            EmployeeProjectData employeeProjectData = new EmployeeProjectData(csvData.employeeId(), from, to);
+            EmployeeProjectData employeeProjectData = new EmployeeProjectData(csvData.getEmployeeId(), from, to);
 
             if (projectData.isPresent()) {
                 ProjectData project = projectData.get();
                 project.employees().add(employeeProjectData);
             } else {
-                allProjects.add(new ProjectData(csvData.projectId(), new ArrayList<>(List.of(employeeProjectData))));
+                allProjects.add(new ProjectData(csvData.getProjectId(), new ArrayList<>(List.of(employeeProjectData))));
             }
         });
 
@@ -47,7 +47,7 @@ public class DefaultProjectService implements ProjectService {
         projects.forEach(project -> {
             List<Pair<EmployeeProjectData, EmployeeProjectData>> allEmployeePairsForProject = getPairsFromProjectEmployees(project.employees());
             if (!allEmployeePairsForProject.isEmpty()) {
-                colleaguesWithCommonProjects.addAll(findAllColleaguesWithCommonProjectsFromProjectPairs(allEmployeePairsForProject, project.id()));
+                findAllColleaguesWithCommonProjectsFromProjectPairs(allEmployeePairsForProject, project.id(), colleaguesWithCommonProjects);
             }
         });
 
@@ -57,9 +57,7 @@ public class DefaultProjectService implements ProjectService {
         return longestLastingColleagues.orElse(null);
     }
 
-    private List<ColleaguesWithCommonProjects> findAllColleaguesWithCommonProjectsFromProjectPairs(List<Pair<EmployeeProjectData, EmployeeProjectData>> allEmployeePairsForProject, int projectID) {
-        List<ColleaguesWithCommonProjects> colleaguesWithCommonProjects = new ArrayList<>();
-
+    private void findAllColleaguesWithCommonProjectsFromProjectPairs(List<Pair<EmployeeProjectData, EmployeeProjectData>> allEmployeePairsForProject, int projectID, List<ColleaguesWithCommonProjects> colleaguesWithCommonProjects) {
         allEmployeePairsForProject.forEach(pair -> {
             EmployeeProjectData firstEmployee = pair.getLeft();
             EmployeeProjectData secondEmployee = pair.getRight();
@@ -79,8 +77,6 @@ public class DefaultProjectService implements ProjectService {
                 }
             }
         });
-
-        return colleaguesWithCommonProjects;
     }
 
     private List<Pair<EmployeeProjectData, EmployeeProjectData>> getPairsFromProjectEmployees(List<EmployeeProjectData> employees) {

@@ -6,7 +6,7 @@ function UploadCsv() {
     const fileHandler = ({event}: { event: any }) => {
         const formData = new FormData();
         formData.append("file", event.target.files[0]);
-        // formData.append("format", "yyyy-MM-dd");
+        formData.append("format", "yyyy-MM-dd");
         console.log(event.target.files[0]);
 
         fetch("http://localhost:8080/api/csv/longest-lasting-colleagues", {
