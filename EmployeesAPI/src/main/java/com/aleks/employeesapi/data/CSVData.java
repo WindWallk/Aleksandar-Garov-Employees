@@ -1,7 +1,7 @@
 package com.aleks.employeesapi.data;
 
 import com.opencsv.bean.CsvBindByName;
-
+import com.opencsv.bean.CsvBindByPosition;
 import org.springframework.lang.NonNull;
 
 public class CSVData {
@@ -22,6 +22,13 @@ public class CSVData {
 
         public CSVData() {
 
+        }
+
+        public CSVData(int employeeId, int projectId, @NonNull String startDate, String endDate) {
+                this.employeeId = employeeId;
+                this.projectId = projectId;
+                this.startDate = startDate;
+                this.endDate = endDate;
         }
 
 
