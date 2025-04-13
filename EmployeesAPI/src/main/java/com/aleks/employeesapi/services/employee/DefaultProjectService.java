@@ -63,14 +63,14 @@ public class DefaultProjectService implements ProjectService {
             EmployeeProjectData secondEmployee = pair.getRight();
 
             long daysWorkedTogether = calculateDaysBetween(firstEmployee.from(), firstEmployee.to(), secondEmployee.from(), secondEmployee.to());
-            if(daysWorkedTogether > 1) {
+            if (daysWorkedTogether > 1) {
                 Optional<ColleaguesWithCommonProjects> existing = colleaguesWithCommonProjects.stream()
                         .filter(c -> (c.firstColleagueId() == firstEmployee.id() && c.secondColleagueId() == secondEmployee.id()) || (c.firstColleagueId() == secondEmployee.id() && c.secondColleagueId() == firstEmployee.id()))
                         .findFirst();
 
                 CommonProjectData commonProjectData = new CommonProjectData(projectID, daysWorkedTogether);
 
-                if(existing.isPresent()) {
+                if (existing.isPresent()) {
                     existing.get().commonProjectData().add(commonProjectData);
                 } else {
                     colleaguesWithCommonProjects.add(new ColleaguesWithCommonProjects(firstEmployee.id(), secondEmployee.id(), new ArrayList<>(List.of(commonProjectData))));
