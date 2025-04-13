@@ -1,11 +1,8 @@
 package com.aleks.employeesapi.controllers;
 
-import com.aleks.employeesapi.data.CSVData;
-import com.aleks.employeesapi.data.EmployeeProjectData;
-import com.aleks.employeesapi.data.JsonPayload;
-import com.aleks.employeesapi.data.LongestLastingColleagues;
+import com.aleks.employeesapi.data.*;
 import com.aleks.employeesapi.services.csv.CSVService;
-import com.aleks.employeesapi.services.employee.EmployeeService;
+import com.aleks.employeesapi.services.employee.ProjectService;
 import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +18,18 @@ public class CSVController {
     @Resource(name = "defaultCSVService")
     private CSVService csvService;
 
-    @Resource(name = "defaultEmployeeService")
-    private EmployeeService employeeService;
+    @Resource(name = "defaultProjectService")
+    private ProjectService projectService;
 
     @GetMapping("/longest-lasting-colleagues")
-    public ResponseEntity<JsonPayload> extractLongestLastingColleagues(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<JsonPayload> extractLongestLastingColleagues(@RequestParam("file") MultipartFile file, @RequestParam("pattern") String datePattern) {
         try {
             List<CSVData> csvDataList = csvService.extractCSVDataFromFile(file);
-            List<EmployeeProjectData> employeeDataList = employeeService.convertCSVDataToEmployeeData(csvDataList);
-            LongestLastingColleagues longestLastingColleagues = employeeService.findLongestLastingColleagues(employeeDataList);
-            return ResponseEntity.ok(new JsonPayload(longestLastingColleagues, null));
+            List<ProjectData> projects = projectService.convertCSVDataToProjectData(csvDataList, datePattern);
+            ColleaguesWithCommonProjects colleaguesWithCommonProjects = projectService.findLongestLastingColleagues(projects);
+            return ResponseEntity.ok(new JsonPayload(colleaguesWithCommonProjects, null));
         } catch (DateTimeException e) {
-            return ResponseEntity.badRequest().body(new JsonPayload(null, "One of the dates provided cannot be parsed"));
+            return ResponseEntity.badRequest().body(new JsonPayload(null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new JsonPayload(null, e.getMessage()));
         }
