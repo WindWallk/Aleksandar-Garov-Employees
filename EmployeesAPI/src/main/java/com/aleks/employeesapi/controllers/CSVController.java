@@ -1,7 +1,7 @@
 package com.aleks.employeesapi.controllers;
 
 import com.aleks.employeesapi.data.CSVData;
-import com.aleks.employeesapi.data.EmployeeData;
+import com.aleks.employeesapi.data.EmployeeProjectData;
 import com.aleks.employeesapi.data.JsonPayload;
 import com.aleks.employeesapi.data.LongestLastingColleagues;
 import com.aleks.employeesapi.services.csv.CSVService;
@@ -28,7 +28,7 @@ public class CSVController {
     public ResponseEntity<JsonPayload> extractLongestLastingColleagues(@RequestParam("file") MultipartFile file) {
         try {
             List<CSVData> csvDataList = csvService.extractCSVDataFromFile(file);
-            List<EmployeeData> employeeDataList = employeeService.convertCSVDataToEmployeeData(csvDataList);
+            List<EmployeeProjectData> employeeDataList = employeeService.convertCSVDataToEmployeeData(csvDataList);
             LongestLastingColleagues longestLastingColleagues = employeeService.findLongestLastingColleagues(employeeDataList);
             return ResponseEntity.ok(new JsonPayload(longestLastingColleagues, null));
         } catch (DateTimeException e) {

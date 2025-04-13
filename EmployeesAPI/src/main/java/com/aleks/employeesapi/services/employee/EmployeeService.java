@@ -1,13 +1,13 @@
 package com.aleks.employeesapi.services.employee;
 
 import com.aleks.employeesapi.data.CSVData;
-import com.aleks.employeesapi.data.EmployeeData;
 import com.aleks.employeesapi.data.LongestLastingColleagues;
+import com.aleks.employeesapi.data.ProjectData;
 
 import java.util.List;
 
 public interface EmployeeService {
-    List<EmployeeData> convertCSVDataToEmployeeData(List<CSVData> csvDataList);
+    List<ProjectData> convertCSVDataToEmployeeData(List<CSVData> csvDataList);
 
-    LongestLastingColleagues findLongestLastingColleagues(List<EmployeeData> employees);
+    LongestLastingColleagues findLongestLastingColleagues(List<ProjectData> employees);
 }

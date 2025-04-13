@@ -1,6 +1,6 @@
 package com.aleks.employeesapi.data;
 
-import java.time.LocalDate;
+import java.util.List;
 
-public record ProjectData(int projectId, LocalDate from, LocalDate to) {
+public record ProjectData(int id, List<EmployeeProjectData> employees) {
 }
